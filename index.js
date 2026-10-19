@@ -45,8 +45,11 @@ app.post('/biodata', (req, res) => {
         'INSERT INTO biodata (id, nama, nim, kelas) VALUES ($1, $2, $3, $4) RETURNING *',
         [id, nama, nim, kelas]
     )
-        .then(result => res.json(result.rows[0]))
-        .catch(err => console.error(err));
+        .then(result => res.status(201).json(result.rows[0]))
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({ message: 'Internal Server Error' });
+        });
 });
 
 // PUT (Update Data)
