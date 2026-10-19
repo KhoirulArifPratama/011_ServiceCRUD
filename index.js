@@ -124,6 +124,10 @@ app.delete('/biodata/:id', (req, res) => {
         });
 });
 
+app.use((req, res) => {
+    res.status(404).json({ message: 'Endpoint tidak ditemukan' });
+});
+
 app.listen(port, () => {
     console.log(`App running on port ${port}.`);
 });
