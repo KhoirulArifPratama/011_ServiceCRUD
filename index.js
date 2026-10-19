@@ -1,7 +1,7 @@
 import express from 'express'
 import pg from 'pg'
 const app = express()
-const port = 3000
+const port = Number(process.env.PORT) || 3000
 const { Pool } = pg
 
 app.use(express.json())
@@ -16,11 +16,11 @@ app.get('/health', (req, res) => {
 })
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'mahasiswa',
-    password: '123',
-    port: 5432,
+    user: process.env.PGUSER || 'postgres',
+    host: process.env.PGHOST || 'localhost',
+    database: process.env.PGDATABASE || 'mahasiswa',
+    password: process.env.PGPASSWORD,
+    port: Number(process.env.PGPORT) || 5432,
 })
 
 // GET ALL
