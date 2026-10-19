@@ -11,6 +11,10 @@ app.use(
     })
 )
 
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok' })
+})
+
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
