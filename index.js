@@ -37,9 +37,23 @@ app.get('/', (req, res) => {
         });
 });
 
+const hasRequiredFields = (body, fields) =>
+    body !== null
+        && typeof body === 'object'
+        && fields.every(field =>
+            body[field] !== undefined
+            && body[field] !== null
+            && String(body[field]).trim() !== ''
+        );
+
 // POST (Tambah Data)
 app.post('/biodata', (req, res) => {
-    const { id, nama, nim, kelas } = req.body;
+    const body = req.body ?? {};
+    const { id, nama, nim, kelas } = body;
+
+    if (!hasRequiredFields(body, ['id', 'nama', 'nim', 'kelas'])) {
+        return res.status(400).json({ message: 'Semua field biodata wajib diisi' });
+    }
 
     pool.query(
         'INSERT INTO biodata (id, nama, nim, kelas) VALUES ($1, $2, $3, $4) RETURNING *',
@@ -55,7 +69,12 @@ app.post('/biodata', (req, res) => {
 // PUT (Update Data)
 app.put('/biodata/:id', (req, res) => {
     const { id } = req.params;
-    const { nama, nim, kelas } = req.body;
+    const body = req.body ?? {};
+    const { nama, nim, kelas } = body;
+
+    if (!hasRequiredFields(body, ['nama', 'nim', 'kelas'])) {
+        return res.status(400).json({ message: 'Semua field biodata wajib diisi' });
+    }
 
     pool.query(
         'UPDATE biodata SET nama=$1, nim=$2, kelas=$3 WHERE id=$4 RETURNING *',
